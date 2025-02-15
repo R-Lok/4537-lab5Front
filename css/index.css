@@ -9,3 +9,21 @@ body {
     justify-content: center;
     align-items: center;
 }
+
+#append {
+    height: 100px;
+    width: 200px;   
+    margin-right: 10vw;
+}
+
+textarea{
+    height: 10vh;
+    width: 10vw;
+    display: block;
+    margin-right: 10vw;
+}
+
+#result-container {
+    height: fit-content;
+    width:  10vw;
+}
