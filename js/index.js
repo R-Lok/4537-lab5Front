@@ -30,7 +30,7 @@ document.getElementById('submit-input').addEventListener('click', async (e) => {
         send_get(query)
     }
     if(requestType === "POST") {
-
+        send_post(query)
     } else {
         showInvalidQuery()
     }
@@ -82,4 +82,30 @@ function showData(container, data) {
 
 function showInvalidQuery() {
     document.getElementById('result').textContent = invalidQueryText
+}
+
+async function send_post(query) {
+    const resultArea = document.getElementById('result')
+
+    const data = JSON.stringify({"sql": query})
+    const headers = new Headers();
+    headers.append("Content-Type", "application/json");
+
+    const requestOptions = {
+        method: "POST",
+        headers: headers,
+        body: data,
+        redirect: "follow"
+    };
+
+    try {
+        const response = await fetch("https://www.fortunedgalab.xyz/lab5/sql", requestOptions)
+        if(!response.ok) {
+            resultArea.textContent = `Error: ${(await response.json()).status}`
+        } else {
+            resultArea.textContent = (await response.json()).status
+        }
+    } catch (err) {
+        resultArea.textContent = networkErrorText
+    }
 }
