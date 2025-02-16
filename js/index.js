@@ -29,7 +29,7 @@ document.getElementById('submit-input').addEventListener('click', async (e) => {
     if(requestType === "GET") {
         send_get(query)
     }
-    if(requestType === "POST") {
+    else if(requestType === "POST") {
         send_post(query)
     } else {
         showInvalidQuery()
@@ -61,6 +61,7 @@ async function send_get(query) {
         const response = await fetch(`https://www.fortunedgalab.xyz/lab5/sql?sql=${query}`, requestOptions)
         if(!response.ok) {
             resultArea.textContent = `Error: ${(await response.json()).status}`
+            notify(resultArea, false)
         } else {
             const data = (await response.json()).data
             console.log(data)
@@ -78,10 +79,13 @@ function showData(container, data) {
         row.textContent = `${data[i].patientid} || ${data[i].name} || ${data[i].dateOfBirth}`
         container.appendChild(row)
     }
+    notify(container, true)
 }
 
 function showInvalidQuery() {
-    document.getElementById('result').textContent = invalidQueryText
+    const container = document.getElementById('result')
+    container.textContent = invalidQueryText
+    notify(container, false)
 }
 
 async function send_post(query) {
@@ -102,10 +106,19 @@ async function send_post(query) {
         const response = await fetch("https://www.fortunedgalab.xyz/lab5/sql", requestOptions)
         if(!response.ok) {
             resultArea.textContent = `Error: ${(await response.json()).status}`
+            notify(resultArea, false)
         } else {
             resultArea.textContent = (await response.json()).status
+            notify(resultArea, true)
         }
     } catch (err) {
         resultArea.textContent = networkErrorText
     }
+}
+
+function notify(container, success) {
+    container.style.border = `1px solid ${success ? 'green' : 'red'}`
+    setTimeout(() => {
+        container.style.border = ''
+    }, 5000)
 }
