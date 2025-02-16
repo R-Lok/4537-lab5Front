@@ -66,6 +66,7 @@ async function send_get(query) {
 }
 
 function showData(container, data) {
+    container.replaceChildren()
     for(let i = 0; i < data.length; i++) {
         const row = document.createElement('div')
         row.textContent = `${data[i].patientid} || ${data[i].name} || ${data[i].dateOfBirth}`
