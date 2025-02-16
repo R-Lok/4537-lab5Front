@@ -25,21 +25,27 @@ document.getElementById('submit-input').addEventListener('click', async (e) => {
 
     const query = document.getElementById('input-area').value.trim()
 
-    if(isGET(query)) {
-        await send_get(query)
-    } else {
+    const requestType = getRequestType(query)
+    if(requestType === "GET") {
+        send_get(query)
+    }
+    if(requestType === "POST") {
 
+    } else {
+        showInvalidQuery()
     }
 
 })
 
-function isGET(query) {
+function getRequestType(query) {
     const q_noncased = query.toLowerCase()
 
     if(q_noncased.startsWith("select")){
-        return true
+        return "GET"
+    } else if (q_noncased.startsWith("insert")) {
+        return "POST"
     } else {
-        return false
+        return "INVALID"
     }
 }
 
@@ -54,7 +60,7 @@ async function send_get(query) {
     try {
         const response = await fetch(`https://www.fortunedgalab.xyz/lab5/sql?sql=${query}`, requestOptions)
         if(!response.ok) {
-            resultArea.textContent = (await response.json()).status
+            resultArea.textContent = `Error: ${(await response.json()).status}`
         } else {
             const data = (await response.json()).data
             console.log(data)
@@ -72,4 +78,8 @@ function showData(container, data) {
         row.textContent = `${data[i].patientid} || ${data[i].name} || ${data[i].dateOfBirth}`
         container.appendChild(row)
     }
+}
+
+function showInvalidQuery() {
+    document.getElementById('result').textContent = invalidQueryText
 }
